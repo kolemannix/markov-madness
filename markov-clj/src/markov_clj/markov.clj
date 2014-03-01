@@ -8,7 +8,6 @@
         value (last tuple)]
     [key value]))
 
-
 (defn index-frequencies [database [key val]]
   (if-let [val-at-key (database key)]
     ;; Prefix is in database
@@ -26,8 +25,22 @@
 
 
 ;; TODO map-filtered somethingwhatsit
+
+(defn next-word [prefix database]
+  (let [value-map (database prefix)]
+    (select-randomly value-map)))
+
+(defn select-randomly [val-map]
+  (-> val-map
+      (map (fn [[k v]] (repeat v k)) ,,)
+      (apply conj ,,)
+      flatten
+      rand-nth))
+
+(select-randomly {"foggy" 1, "sunny" 5, "cloudy" 1, "blue" 1})
+
 (defn create-sentence [seed database]
-  )
+  (iterate #(next-word % database) seed))
 
 (defn lookup [key database]
   (database key))
