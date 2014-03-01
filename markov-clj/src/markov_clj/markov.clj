@@ -26,21 +26,24 @@
 
 ;; TODO map-filtered somethingwhatsit
 
-(defn next-word [prefix database]
-  (let [value-map (database prefix)]
-    (select-randomly value-map)))
+(defn lookup [key database]
+  (database key))
 
 (defn select-randomly [val-map]
-  (-> val-map
-      (map (fn [[k v]] (repeat v k)) ,,)
-      (apply conj ,,)
+  (->> val-map
+      (map (fn [[k v]] (repeat v k)))
       flatten
       rand-nth))
 
-(select-randomly {"foggy" 1, "sunny" 5, "cloudy" 1, "blue" 1})
+(defn next-word [database {prefix :prefix word :word}]
+  (println "Next word with \n" prefix "\n" word)
+  (let [value-map (database prefix)
+        word (select-randomly value-map)
+        _ (println word)
+        __ (println prefix)
+        new-prefix (conj (subvec prefix 1) word)]
+    {:word word :prefix new-prefix}))
 
-(defn create-sentence [seed database]
-  (iterate #(next-word % database) seed))
+(defn create-sentence [database seed]
+  (iterate #(next-word database %) {:prefix seed}))
 
-(defn lookup [key database]
-  (database key))
