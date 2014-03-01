@@ -7,10 +7,8 @@
 (def corpus (re-seq #"\w+" (slurp "resources/corpus.txt")))
 
 (def baby-corpus (re-seq #"\w+" (slurp "resources/corpus2.txt")))
-
 (println baby-corpus)
-(build-database baby-corpus 2)
-
+(time (count (build-database corpus 4)))
 (fact "Database is generated properly for small corpus"
   (build-database baby-corpus 3) => {["off" "The"] {"car" 1},
                                      ["jumped" "off"] {"The" 1},
@@ -42,6 +40,11 @@
   )
 ;; The above data generated using clojure.pprint/pprint
 
-(lookup ["The"] (build-database baby-corpus 2))
+(fact "lookup function behaves properly"
+  (lookup ["The"] (build-database baby-corpus 2)) => {"car" 1, "kid" 1, "sky" 4})
+
+(fact "select randomly function behaves properly"
+  (select-randomly {"foggy" 1, "sunny" 5, "cloudy" 1, "blue" 1}) => (some-checker
+                                                                     "foggy" "sunny" "cloudy" "blue"))
 
 (create-sentence "The car" (build-database baby-corpus 3))
