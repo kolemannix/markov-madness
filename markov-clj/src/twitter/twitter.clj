@@ -3,7 +3,8 @@
    [twitter.oauth]
    [twitter.callbacks]
    [twitter.callbacks.handlers]
-   [twitter.api.restful])
+   [twitter.api.restful]
+   [twitter.request])
   (:import
    (twitter.callbacks.protocols SyncSingleCallback)))
 
@@ -14,26 +15,17 @@
 
 ; simply retrieves the user, authenticating with the above credentials
 ; note that anything in the :params map gets the -'s converted to _'s
-(defn- get-statuses [user-id] (->>
-                               (:body (statuses-user-timeline :oauth-creds my-creds
-                                                              :params {:screen-name user-id}))
+(defn- get-tweets [user-id] (->>
+                               (get-page user-id)
                                (map :text)))
 
-(get-statuses "bbombgardener")
+(defn- get-page [user-id & since-id]
+  (:body (statuses-user-timeline :oauth-creds my-creds
+                                 :params {:screen-name user-id
+                                          :count 200
+                                          :include-rts "false"})))
 
+(get-tweets "bbombgardener")
 
-; shows the users friends
-(friendships-show :oauth-creds my-creds 
-                  :params {:target-screen-name "AdamJWynne"})
-
-; use a custom callback function that only returns the body of the response
-(friendships-show :oauth-creds my-creds
-                  :callbacks (SyncSingleCallback. response-return-body 
-                                                  response-throw-error
-                                                  exception-rethrow)      
-                  :params {:target-screen-name "AdamJWynne"})
-
-; upload a picture tweet with a text status attached, using the default sync-single callback
-(statuses-update-with-media :oauth-creds *creds*
-                            :body [(file-body-part "/pics/test.jpg")
-                                   (status-body-part "testing")])
+(statuses-update :oauth-creds my-creds
+                 :params {:status "Hello, world!"}) 
