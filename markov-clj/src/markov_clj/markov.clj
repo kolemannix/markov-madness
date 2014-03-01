@@ -35,15 +35,21 @@
       flatten
       rand-nth))
 
-(defn next-word [database {prefix :prefix word :word}]
-  (println "Next word with \n" prefix "\n" word)
-  (let [value-map (database prefix)
-        word (select-randomly value-map)
-        _ (println word)
-        __ (println prefix)
-        new-prefix (conj (subvec prefix 1) word)]
-    {:word word :prefix new-prefix}))
+(defn next-word [database {prefix :prefix}]
+  (if-let [value-map (database prefix)]
+    (let [new-word (select-randomly value-map)
+          new-prefix (conj (subvec prefix 1) new-word)]
+      {:word new-word :prefix new-prefix})
+    {:word :tail}))
 
 (defn create-sentence [database seed]
-  (iterate #(next-word database %) {:prefix seed}))
+  (loop [{word :word :as prefix-map} {:word :head :prefix seed} words '()]
+    (if (= :tail word)
+      words
+      (recur (next-word database prefix-map) (conj words word)))))
 
+(def baby-corpus (re-seq #"\w+" (slurp "resources/corpus2.txt")))
+
+(println (take 5 (create-sentence (build-database baby-corpus 3) ["sky" "is"])))
+
+(next-word (build-database baby-corpus 3) {:word :head :prefix ["sky" "is"]})

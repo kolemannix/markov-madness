@@ -47,4 +47,4 @@
   (select-randomly {"foggy" 1, "sunny" 5, "cloudy" 1, "blue" 1}) => (some-checker
                                                                      "foggy" "sunny" "cloudy" "blue"))
 
-(create-sentence (build-database baby-corpus 3) ["The" "car"])
+(create-sentence (build-database baby-corpus 3) ["sky" "is"])
