@@ -13,6 +13,9 @@
 (defn get-commits [username repo-name]
   (repos/commits username repo-name {:oauth-token token :per-page 100}))
 
+(defn- stringify [coll]
+  (apply str (interpose " " coll)))
+
 (defn extract-repo-commit-messages [username repo]
   (->> repo
    (map (fn [c]
@@ -31,21 +34,20 @@
      (map #(get-commits-and-extract-messages user %))
      stringify)))
 
-(defn- stringify [coll]
-  (apply str (interpose " " coll)))
 
 (defn- make-user-filename [user]
   (str "resources/" user "_commits.txt"))
+
+(defn create-run-if-not-exists [filename user]
+                                   (if-not (.exists (clojure.java.io/as-file filename))
+                                     (spit filename (get-user-commit-corpus user)))
+                                   (slurp filename))
 
 (defn create-user-database [user]
   (let [filename (make-user-filename user)
         corpus (create-run-if-not-exists filename user)]
     corpus))
 
-(defn create-run-if-not-exists [filename user]
-                                   (if-not (.exists (clojure.java.io/as-file filename))
-                                     (spit filename (get-user-commit-corpus user)))
-                                   (slurp filename))
 
 (defn generate-commits [user]
   (markov/generate (slurp (make-user-filename user)) 1))
