@@ -1,10 +1,10 @@
 (ns markov-clj.markov)
 
 (defn remove-handles [corpus]
-  (map (fn [word] (if (.startsWith word "@")
-                    (subs word 1)
-                    word))
-       corpus))
+  (vec (doall (map (fn [word] (if (.startsWith word "@")
+                            (subs word 1)
+                            word))
+               corpus))))
 
 (defn parse-corpus [s]
   (remove-handles (clojure.string/split s #"\s+")))
