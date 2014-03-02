@@ -61,8 +61,13 @@
   (println ids)
   (reply (find-new-followers ids)))
 
+(defn make-valid-tweet [tweets]
+  (let [gen (generate tweets 2)]
+    (take-while #(> 140 (count %)) gen)))
+
 (defn markov-that-thun-thun-thun [[id tweets]]
-  (println id tweets))
+  (->> (make-valid-tweet tweets)
+       tweet-the-twitter))
 
 (defn process-followers []
   (->> (followers-ids :oauth-creds my-creds
