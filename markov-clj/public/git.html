@@ -24,7 +24,6 @@
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/"></script>
     <![endif]-->
 </head>
 
@@ -71,5 +70,36 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+<script>
+    /**
+     * Created by brent on 3/2/14.
+     */
+    angular.module('GitHacks', [ ])
+
+            .service('clojureService', ['$http', function($http, fbURL) {
+                var service = {};
+
+                var url="/";
+
+                service.generateCommits = function(username, cb) {
+                    $http.post("/commits", {username: username})
+                            .success(cb)
+                            .error(function(d) {console.log(d)});
+                }
+            }])
+
+            .controller('GitCtrl', ['$scope', 'clojureService', function($scope, clojureService) {
+                $scope.username = "bbaumgar";
+
+                $scope.goGoGenerate = function() {
+                    clojureService.generateCommits($scope.username, function(d) {
+                        console.log(d);
+                    })
+                }
+
+            }]);
+</script>
+
 </body>
 </html>
