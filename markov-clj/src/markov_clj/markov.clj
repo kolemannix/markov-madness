@@ -1,6 +1,5 @@
 (ns markov-clj.markov)
 
-
 (defn parse-corpus [s]
   (clojure.string/split s #"\s+"))
 
@@ -23,7 +22,7 @@
     (assoc database key {val 1})))
 
 (defn build-database [corpus n] (->> corpus
-                                     ;; parse-corpus
+                                     parse-corpus
                                      (generate-tuples (inc n) ,,)
                                      (map index-tuple ,,)
                                      (reduce index-frequencies {} ,,)))
@@ -74,3 +73,5 @@
                                   (interpose " " ,,) 
                                   (apply str ,,)))]
     (repeatedly generation-fn)))
+
+(println "\n" (first (generate (parse-corpus (slurp "resources/koleman_tweets.txt")) 1)))
