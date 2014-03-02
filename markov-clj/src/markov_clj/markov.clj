@@ -44,18 +44,30 @@
 
 (defn choose-seed [database]
   (key (let [capital-seeds (filter (fn [[k v]]
-                                 (Character/isUpperCase (ffirst k))) database)]
-     (println capital-seeds)
-     (if (not (empty? capital-seeds))
-       (rand-nth (seq capital-seeds))
-       (rand-nth (seq database))))))
+                                     (Character/isUpperCase (ffirst k))) database)]
+         (if (not (empty? capital-seeds))
+           (rand-nth (seq capital-seeds))
+           (rand-nth (seq database))))))
 
-(defn generate [corpus]
-  (let [database (build-database 2 corpus)]
-    ()))
 
-(defn create-sentence [database seed]
-  (loop [{word :word :as prefix-map} {:word :head :prefix seed} words []]
-    (if (= :tail word)
-      words
-      (recur (next-word database prefix-map) (conj words word)))))
+(defn create-sentence [database]
+  (let [seed (choose-seed database)]
+    (loop [{word :word :as prefix-map} {:word :head :prefix seed}
+           words [(last seed)]]
+      (if (= :tail word)
+        words
+        (recur (next-word database prefix-map) (conj words word))))))
+
+;; TODO make this not necessary
+(defn remove-head [words]
+  (filter #(not (= % :head)) words))
+
+(defn generate [corpus n]
+  (let [database (build-database corpus n)
+        generation-fn (fn [] (->> (create-sentence database)
+                                  remove-head
+                                  (interpose " " ,,) 
+                                  (apply str ,,)))]
+    (repeatedly generation-fn)))
+(first (generate (parse-corpus (slurp "resources/corpus2.txt")) 2))
+
