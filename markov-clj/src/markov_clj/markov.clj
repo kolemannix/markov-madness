@@ -69,5 +69,4 @@
                                   (interpose " " ,,) 
                                   (apply str ,,)))]
     (repeatedly generation-fn)))
-(first (generate (parse-corpus (slurp "resources/corpus2.txt")) 2))
 

@@ -7,7 +7,9 @@
    [twitter.api.restful]
    [twitter.request]
    [twitter.api.streaming]
-   [clojure.data.json :as json ])
+   [clojure.data.json :as json ]
+   [markov-clj.markov :as markov]
+   [clojure.set :as set])
   (:require
    [http.async.client :as ac])
   (:import
@@ -48,9 +50,21 @@
         current-fol (into #{} current)]
     (->>
      (into #{} old-fol)
-     (clojure.set/difference current-fol))))
+     (set/difference current-fol))))
 
-(reply (find-new-followers [61524108 752422021]))
+
+;; (defn make-valid-tweet [tweets]
+  ;; (let [gen (markov/generate tweets 2)]
+    ;; (take-while #(< 140 (count %)) (gen))))
+
+(defn make-valid-tweet [tweets]
+  (for [candidate (markov-clj.markov/generate tweets 1)
+        :when (< 140 (count candidate))]
+    (println candidate)))
+
+(defn markov-that-thun-thun-thun [[id tweets]]
+  (->> (make-valid-tweet tweets)
+       tweet-the-twitter))
 
 (defn reply [new-followers]
   (->>
@@ -58,16 +72,7 @@
    (map markov-that-thun-thun-thun)))
 
 (defn store-and-reply-to-followers [ids]
-  (println ids)
   (reply (find-new-followers ids)))
-
-(defn make-valid-tweet [tweets]
-  (let [gen (generate tweets 2)]
-    (take-while #(> 140 (count %)) gen)))
-
-(defn markov-that-thun-thun-thun [[id tweets]]
-  (->> (make-valid-tweet tweets)
-       tweet-the-twitter))
 
 (defn process-followers []
   (->> (followers-ids :oauth-creds my-creds
@@ -77,6 +82,13 @@
        store-and-reply-to-followers
        ))
 
+(def ktweets (get-tweets 61524108))
+
+(make-valid-tweet ktweets)
+
+;; (take 10 ktweets)
+
 (process-followers)
 
-(defn -main [] (start-filtering))
+;; [61524108]
+(defn -main [] (process-followers))
