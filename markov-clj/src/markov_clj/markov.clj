@@ -23,6 +23,7 @@
     (assoc database key {val 1})))
 
 (defn build-database [corpus n] (->> corpus
+                                     ;; parse-corpus
                                      (generate-tuples (inc n) ,,)
                                      (map index-tuple ,,)
                                      (reduce index-frequencies {} ,,)))

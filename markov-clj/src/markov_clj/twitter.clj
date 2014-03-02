@@ -81,7 +81,7 @@
 (def ktweets (into [] (get-tweets 61524108)))
 
 ;; (spit "ktweets.txt" (str ktweets))
-;; (first (markov-clj.markov/generate ktweets 1))
-(apply str (interpose " " ktweets))
+(first (markov-clj.markov/generate ktweets 1))
+(count (apply str (interpose " " ktweets)))
 
 (defn -main [] (process-followers))
