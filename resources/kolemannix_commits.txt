@@ -1,0 +1,69 @@
+remove ds_store
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> remove unused stuff
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> routine update Move vimrc to vim folder, source it from ~/.vimrc. Move entire vim folder to dotfiles. Revise cpp ycm config. derp I'm sure these have changed since I last committed. I also started using Synergy the more things change the more they seem to stay the same this isn't even my final form Create cljdev script to launch a tmux session set up for clojure development with lein and vim-fireplace. Added some clojure stuff to vimrc merge remote remove ssh public key from repo Initial Commit Initial commit  Merge branch 'master' of https://github.com/kolemannix/emacs.d
+
+asdf asdfasdf sdf change theme
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> Update README.md Merge branch 'master' of https://github.com/kolemannix/emacs.d
+
+Conflicts:
+	ac-comphist.dat
+	init.el
+
+merged add things
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> make config more modular
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> remove old bindings. make new bindings.
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> remove old bindings. make new bindings.
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> bind return to return and indent
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> update update README remove old .emacs that was hiding evil nc working again, some shiny new bindings. Tons of bindings. derp Merge branch 'master' of https://github.com/kolemannix/emacs.d
+
+readme got updated remotely moar settings Create README.md remove backups (hopefully)' initial import  prepare for battle
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> remove backup.clj Create README.md initial commit
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> initial commit
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> Update README.md Initial commit  Add the official documentation from the U.Va site Update README.md Update README.md Update README.md  think about refactoring a lot of things in this project and add a comment Clean up some code. More cleanups to come. Merge branch 'master' of https://github.com/kolemannix/ibcm-assembler add support for labels in ibcm code Delete ibcmspec.pdf Update README.md update readme Add built jar to repo, add example files to example dir as well as readme Update README.md init   you didnt see anything
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> Add auth file for dickens bot     Add condition for @ characters Make it a vec again Remove @ from handles rather than breaking the chain Bring in overtone scheduler decrease tweet length Filter handles    Fine-tune character-limiting for twitter! Decrease word count Add koleman_tweets fix parsing
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>    remove test line
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> things
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>  Hardcode a word limit on the generations. Wow huge results from this small change! rename tweets file and move
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>   merge
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> change things
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>    Polish up generate function. Remove :head from final word list in a hack-ish way
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>    fix bug with seed generation and write test
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> formatting
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> clean up punctuation parsing stuff and tests
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> dont drop punctuation when parsing corpus
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> markov said his first words! "foggy is sky the fast"!
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> almost done with generate-sentence
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> testsssss Add corpus files to repo implement selection function  complete index-frequencies function, write some tests
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>  add leiningen project
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> Initial commit  Update README.md merge Initial Transfer Update README.md Initial commit  Update README.md remove old artifacts change everything. use bitboard initialization and some type definitions from stockfish engine. move makefile few days worth of work. change coordinate to square. begin implementing magic bitboards. rename bitmap to bitboard, move piece bitboards to an array indexed by piece code, and begin implementing update logic for making moves move to public members on struct classes, like Move and Coordinate to save on function calls later on. Bad practice but, hey, this is chess programming not an enterprise CRUD app ;) create coordinate class. Create some coordinate space conversion functions put the things on git silly create mailbox namespace to hold piececodes and other functions related to mailbox board representation put foundation in place for redundant mailbox array coding things remove pyc remove swaps hello? add readme ignore swaps initial commit  initial commit number 3
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> initial commit
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> Initial commit  create record Game, cease using primitive maps for game representation, add destructuring to all functions where its useful build jar disallow illegal moves disallow illegal moves give the engine the concept of search depth, so it doesn't dance around winning moves. It now picks the quickest winning move it sees. fix console-loop implement simple interface start work on console front end k Fixed it So I renamed some files and committed yesterday from my laptop. Didn't git add the files. Then the laptop's hard drive crashed. Now I gotta re-write it all kk create definitions namespace and memoize minimax. Begin work on console interface Implement and test minimax Begin implementing minimax. Write gen-moves function fix incorrect comment initial commit  Weird. Re-thinking the gui, removed Keyboard layout, added TabSheet for worlds, more changes to come. Fix some comments Initial Transfer 

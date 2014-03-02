@@ -1,0 +1,13 @@
+(ns markov-clj.github
+  (:require
+   [tentacles
+    [repos :as repos]
+    [users :as users]]))
+
+(def username "bbaumgar")
+
+(def brents-repos (repos/user-repos username {:per-page 100}))
+
+(let [names  (map :name brents-repos)])
+
+(def attendr-commits repos/ username "attendr")
