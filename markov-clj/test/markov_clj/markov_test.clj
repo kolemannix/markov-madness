@@ -56,3 +56,5 @@
   (key (choose-seed (build-database baby-corpus 2))) => (some-checker ["The" "kid"]
                                                                   ["The" "car"]
                                                                   ["The" "sky"]))
+(def db (build-database baby-corpus 2))
+(create-sentence db (choose-seed db))
