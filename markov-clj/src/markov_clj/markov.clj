@@ -1,51 +1,60 @@
 (ns markov-clj.markov)
 
-(def corpus
-  (re-seq #"\w+" (slurp "corpus.txt")))
-
-(def baby-corpus (re-seq #"\w+" (slurp "corpus2.txt")))
-
-(defn- generate-tuples [n corpus]
+(defn generate-tuples [n corpus]
   (partition n 1 corpus))
-
-(println (generate-tuples 3 corpus))
 
 (defn index-tuple [tuple]
   (let [key (vec (drop-last tuple))
         value (last tuple)]
     [key value]))
 
-(defn build-database [corpus n] (->> corpus
-                                     (generate-tuples n ,,)
-                                     (map index-tuple ,,)
-                                     (into {}) ,,))
-
-
-(->> corpus
-     (generate-tuples 2 ,,)
-     (map index-tuple ,,)
-     (reduce index-frequencies ,,))
-
-(defn- index-frequencies [database [key val]]
+(defn index-frequencies [database [key val]]
   (if-let [val-at-key (database key)]
     ;; Prefix is in database
-    (if (contains? val-at-key val)
-      (assoc val-at-key val (inc (val-at-key val)))
-      (assoc val-at-key val 1))
+    (let [new-val-at-key (if (contains? val-at-key val)
+                           (assoc val-at-key val (inc (val-at-key val)))
+                           (assoc val-at-key val 1))]
+      (assoc database key new-val-at-key))
     ;; Prefix is not in database
     (assoc database key {val 1})))
 
-(println (build-database corpus 2))
+(defn build-database [corpus n] (->> corpus
+                                     (generate-tuples (inc n) ,,)
+                                     (map index-tuple ,,)
+                                     (reduce index-frequencies {} ,,)))
+
+
 ;; TODO map-filtered somethingwhatsit
-(defn- create-sentence [seed database]
-  (letfn (iterate-word [sentence]
-           (let [next-key (take-last 2 sentence)]
-             )))
-  (vals (filter (fn [[k v]] (= k seed)) database)))
 
-(defn- lookup [key database]
-  (vals (filter (fn [[k v]] (= k key)) database)))
-(lookup ["The"] (build-database baby-corpus 2))
+(defn lookup [key database]
+  (database key))
 
-(println (build-database baby-corpus 3))
-(println (create-sentence "The car" (build-database baby-corpus 3)))
+(defn select-randomly [val-map]
+  (->> val-map
+       (map (fn [[k v]] (repeat v k)))
+       flatten
+       rand-nth))
+
+(defn next-word [database {prefix :prefix}]
+  (if-let [value-map (database prefix)]
+    (let [new-word (select-randomly value-map)
+          new-prefix (conj (subvec prefix 1) new-word)]
+      {:word new-word :prefix new-prefix})
+    {:word :tail}))
+
+(defn choose-seed [database]
+  (let [capital-seeds (filter (fn [[k v]]
+                                (Character/isUpperCase (ffirst k))) database)]
+    (println capital-seeds)
+    (if (not (empty? capital-seeds))
+      (rand-nth (seq capital-seeds))
+      (rand-nth (seq database)))))
+
+(defn generate [corpus]
+  (let [database (build-database 2 corpus)]))
+
+(defn create-sentence [database seed]
+  (loop [{word :word :as prefix-map} {:word :head :prefix seed} words '()]
+    (if (= :tail word)
+      words
+      (recur (next-word database prefix-map) (conj words word)))))
