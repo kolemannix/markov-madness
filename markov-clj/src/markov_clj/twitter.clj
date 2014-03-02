@@ -82,13 +82,15 @@
        store-and-reply-to-followers
        ))
 
-(def ktweets (get-tweets 61524108))
+(def ktweets (spit "data.txt" (into [] (get-tweets 61524108))))
 
-(make-valid-tweet ktweets)
+(str (take 10 ktweets))
+
+;; (make-valid-tweet ktweets)
 
 ;; (take 10 ktweets)
 
-(process-followers)
+;; (process-followers)
 
 ;; [61524108]
 (defn -main [] (process-followers))
