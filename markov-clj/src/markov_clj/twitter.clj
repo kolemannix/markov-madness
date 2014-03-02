@@ -9,7 +9,8 @@
    [twitter.api.streaming]
    [clojure.data.json :as json ]
    [markov-clj.markov :as markov]
-   [clojure.set :as set])
+   [clojure.set :as set]
+   )
   (:require
    [http.async.client :as ac])
   (:import
@@ -36,7 +37,8 @@
 
 (defn tweet-the-twitter [text]
   (try (statuses-update :oauth-creds my-creds
-                    :params {:status text}))) 
+                        :params {:status text})
+       (catch Exception e (println "Bitch I ain't stopping for no error.")))) 
 
 (defn store-followers [ids]
   (->>
@@ -58,7 +60,6 @@
     (loop [candidate (first candidate-tweets)
            others (rest candidate-tweets)]
       (let [final-tweet (str candidate suffix)]
-        (println (count final-tweet) "*****\n" final-tweet)
         (if (< (count final-tweet) 140)
           final-tweet
           (if (empty? others)
@@ -67,7 +68,6 @@
 
 
 (defn create-and-send-tweet [[screen-name tweets]]
-  (println screen-name tweets)
   (->> (make-valid-tweet screen-name tweets)
        tweet-the-twitter
        )
@@ -75,8 +75,8 @@
 
 (defn reply [new-followers]
   (let [follower  (->> new-followers
-                      seq
-                      rand-nth)
+                       seq
+                       rand-nth)
         the-vec [follower (get-tweets follower)]]
     (create-and-send-tweet the-vec)))
 
@@ -93,7 +93,17 @@
        ))
 
 (defn mock-user [handle]
-  (let [tweets (get-tweets handle)])
-  )
+  (let [tweets (get-tweets handle)]
+    (create-and-send-tweet [handle tweets]))
 
-(defn -main [] (process-followers))
+(defn start-markov-thread []
+  (loop []
+    (Thread/sleep (* 60 15000))
+    (process-followers)
+    (recur)))
+
+(defn -main [] (start-markov-thread))
+
+;; (markov-clj.util/tick-now 500 #(println "Hey there!"))
+
+;; (process-followers)
