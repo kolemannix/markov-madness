@@ -31,9 +31,9 @@
 
 (defn select-randomly [val-map]
   (->> val-map
-      (map (fn [[k v]] (repeat v k)))
-      flatten
-      rand-nth))
+       (map (fn [[k v]] (repeat v k)))
+       flatten
+       rand-nth))
 
 (defn next-word [database {prefix :prefix}]
   (if-let [value-map (database prefix)]
