@@ -19,7 +19,7 @@
     (assoc database key {val 1})))
 
 (defn build-database [corpus n] (->> corpus
-                                     (generate-tuples n ,,)
+                                     (generate-tuples (inc n) ,,)
                                      (map index-tuple ,,)
                                      (reduce index-frequencies {} ,,)))
 
@@ -41,20 +41,20 @@
           new-prefix (conj (subvec prefix 1) new-word)]
       {:word new-word :prefix new-prefix})
     {:word :tail}))
+
 (defn choose-seed [database]
-  (filter (fn [[k v]]
-            (Character/isUpperCase (ffirst k))) database))
-(choose-seed (build-database baby-corpus 3))
-(ffirst (build-database baby-corpus 3))
+  (let [capital-seeds (filter (fn [[k v]]
+                                (Character/isUpperCase (ffirst k))) database)]
+    (println capital-seeds)
+    (if (not (empty? capital-seeds))
+      (rand-nth (seq capital-seeds))
+      (rand-nth (seq database)))))
+
+(defn generate [corpus]
+  (let [database (build-database 2 corpus)]))
 
 (defn create-sentence [database seed]
   (loop [{word :word :as prefix-map} {:word :head :prefix seed} words '()]
     (if (= :tail word)
       words
       (recur (next-word database prefix-map) (conj words word)))))
-
-(def baby-corpus (re-seq #"\w+" (slurp "resources/corpus2.txt")))
-
-(println (take 5 (create-sentence (build-database baby-corpus 3) ["sky" "is"])))
-
-(next-word (build-database baby-corpus 3) {:word :head :prefix ["sky" "is"]})
