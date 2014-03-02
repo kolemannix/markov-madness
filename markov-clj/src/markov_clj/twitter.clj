@@ -36,8 +36,9 @@
                                (map :text)))
 
 (defn tweet-the-twitter [text]
-  (statuses-update :oauth-creds my-creds
-                   :params {:status text})) 
+  (try (statuses-update :oauth-creds my-creds
+                    :params {:status text})
+       (catch Exception e (println "Bitch I ain't stopping for no error.")))) 
 
 (defn store-followers [ids]
   (->>
@@ -68,8 +69,7 @@
 
 (defn create-and-send-tweet [[screen-name tweets]]
   (->> (make-valid-tweet screen-name tweets)
-       println
-       ;; tweet-the-twitter
+       tweet-the-twitter
        )
   )
 
