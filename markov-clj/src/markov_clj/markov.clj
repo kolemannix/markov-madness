@@ -74,4 +74,3 @@
                                   (interpose " " ,,) 
                                   (apply str ,,)))]
     (repeatedly generation-fn)))
-
