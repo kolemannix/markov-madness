@@ -1,5 +1,9 @@
 (ns markov-clj.markov)
 
+
+(defn parse-corpus [s]
+  (clojure.string/split s #"\s+"))
+
 (defn generate-tuples [n corpus]
   (partition n 1 corpus))
 
@@ -70,6 +74,4 @@
                                   (apply str ,,)))]
     (repeatedly generation-fn)))
 
-(println (first (generate (parse-corpus (slurp "resources/twocities.txt")) 2)))
-
-
+(println (first (generate (parse-corpus (slurp "resources/corpus2.txt")) 2)))
