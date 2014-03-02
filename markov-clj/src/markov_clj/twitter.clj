@@ -24,14 +24,14 @@
 ; simply retrieves the user, authenticating with the above credentials
 ; note that anything in the :params map gets the -'s converted to _'s
 
-(defn- get-page [user-id & since-id]
+(defn- get-page [screen_name]
   (:body (statuses-user-timeline :oauth-creds my-creds
-                                 :params {:user-id user-id
+                                 :params {:screen-name screen_name 
                                           :count 200
                                           :include-rts "false"})))
 
-(defn- get-tweets [user-id] (->>
-                               (get-page user-id)
+(defn- get-tweets [screen_name] (->>
+                               (get-page screen_name)
                                (map :text)))
 
 (defn tweet-the-twitter [text]
@@ -52,14 +52,13 @@
      (into #{} old-fol)
      (set/difference current-fol))))
 
-(defn make-valid-tweet [tweets]
-  (for [candidate (markov-clj.markov/generate (apply str (interpose " " tweets)) 1)
-        :when (< 120 (count candidate))]
-    (println candidate)))
+(defn make-valid-tweet [screen-name tweets]
+  (let [candidate-tweets (take 10 (markov-clj.markov/generate (apply str (interpose " " tweets)) 1))]
+    (str (first candidate-tweets) " - @" screen-name)))
 
 
-(defn markov-that-thun-thun-thun [[id tweets]]
-  (->> (make-valid-tweet tweets)
+(defn markov-that-thun-thun-thun [[screen-name tweets]]
+  (->> (make-valid-tweet tweets screen-name)
        tweet-the-twitter))
 
 (defn reply [new-followers]
@@ -67,21 +66,20 @@
    (map #(vector % (get-tweets %)) new-followers)
    (map markov-that-thun-thun-thun)))
 
-(defn store-and-reply-to-followers [ids]
-  (reply (find-new-followers ids)))
+(defn store-and-reply-to-followers [handles]
+  (reply (find-new-followers handles)))
 
 (defn process-followers []
-  (->> (followers-ids :oauth-creds my-creds
+  (->> (followers-list :oauth-creds my-creds
                       :params {:screen-name "mockingmarkov"})
        :body
-       :ids
+       :users
+       (map :screen_name)
        store-and-reply-to-followers
        ))
 
 (def ktweets (into [] (get-tweets 61524108)))
 
-;; (spit "ktweets.txt" (str ktweets))
-(first (markov-clj.markov/generate ktweets 1))
-(apply str (interpose " " ktweets))
-
 (defn -main [] (process-followers))
+
+(process-followers)
