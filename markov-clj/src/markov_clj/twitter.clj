@@ -52,22 +52,18 @@
      (into #{} old-fol)
      (set/difference current-fol))))
 
-
-;; (defn make-valid-tweet [tweets]
-  ;; (let [gen (markov/generate tweets 2)]
-    ;; (take-while #(< 140 (count %)) (gen))))
-
 (defn make-valid-tweet [tweets]
-  (for [candidate (markov-clj.markov/generate tweets 1)
-        :when (< 140 (count candidate))]
+  (for [candidate (markov-clj.markov/generate (apply str (interpose " " tweets)) 1)
+        :when (< 120 (count candidate))]
     (println candidate)))
+
 
 (defn markov-that-thun-thun-thun [[id tweets]]
   (->> (make-valid-tweet tweets)
        tweet-the-twitter))
 
 (defn reply [new-followers]
-  (->>
+  (->> 
    (map #(vector % (get-tweets %)) new-followers)
    (map markov-that-thun-thun-thun)))
 
@@ -82,15 +78,10 @@
        store-and-reply-to-followers
        ))
 
-(def ktweets (spit "data.txt" (into [] (get-tweets 61524108))))
+(def ktweets (into [] (get-tweets 61524108)))
 
-(str (take 10 ktweets))
+;; (spit "ktweets.txt" (str ktweets))
+;; (first (markov-clj.markov/generate ktweets 1))
+(apply str (interpose " " ktweets))
 
-;; (make-valid-tweet ktweets)
-
-;; (take 10 ktweets)
-
-;; (process-followers)
-
-;; [61524108]
 (defn -main [] (process-followers))
