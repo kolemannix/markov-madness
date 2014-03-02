@@ -11,9 +11,13 @@
 (defn generate-commit-response [req])
 
 (cmpj/defroutes handler
-  (cmpj/GET "/" [] resp/file-response "/index.html" {:root "/public"})
+  (cmpj/GET "/" [] (resp/file-response "/index.html" {:root "public"}))
+  (cmpj/GET "/git" [] (resp/file-response "/git.html" {:root "public"}))
+  (cmpj/GET "/css/cover.css" [] (resp/file-response "/css/cover.css" {:root "public"}))
+  (cmpj/GET "/css/commits.css" [] (resp/file-response "/css/commits.css" {:root "public"}))
+  (cmpj/GET "/js/main.js" [] (resp/file-response "js/main.js" {:root "public"}))
   (cmpj/POST "/commits" [] generate-commit-response)
-  (route/resources "/")
+  (route/resources "/" {:root "public"})
   (route/not-found "<h1>Page not found</h1>"))
 
 (defn logging [chain] (fn [req]
