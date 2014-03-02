@@ -18,7 +18,7 @@
    (twitter.callbacks.protocols AsyncStreamingCallback)))
 
 
-(def my-creds (apply make-oauth-creds
+(def markov-creds (apply make-oauth-creds
                      (clojure.string/split-lines
                       (slurp "resources/twitter_auth/markov_auth.txt"))))
 
@@ -26,7 +26,7 @@
 ; note that anything in the :params map gets the -'s converted to _'s
 
 (defn- get-page [screen-name]
-  (:body (statuses-user-timeline :oauth-creds my-creds
+  (:body (statuses-user-timeline :oauth-creds markov-creds
                                  :params {:screen-name screen-name 
                                           :count 200
                                           :include-rts "false"})))
@@ -35,10 +35,10 @@
                                (get-page screen-name)
                                (map :text)))
 
-(defn tweet-the-twitter [text]
-  (try (statuses-update :oauth-creds my-creds
+(defn send-tweet [text creds]
+  (try (statuses-update :oauth-creds creds
                         :params {:status text})
-       (catch Exception e (println "Bitch I ain't stopping for no error.")))) 
+       (catch Exception e (println e)))) 
 
 (defn store-followers [ids]
   (->>
@@ -56,7 +56,7 @@
 
 (defn make-valid-tweet [screen-name tweets]
   (let [candidate-tweets (take 20 (markov-clj.markov/generate (apply str (interpose " " tweets)) 1))
-        suffix (str " - @" screen-name)]
+        suffix (if screen-name (str " - @" screen-name) "")]
     (loop [candidate (first candidate-tweets)
            others (rest candidate-tweets)]
       (let [final-tweet (str candidate suffix)]
@@ -67,24 +67,22 @@
             (recur (first others) (rest others))))))))
 
 
-(defn create-and-send-tweet [[screen-name tweets]]
-  (->> (make-valid-tweet screen-name tweets)
-       tweet-the-twitter
-       )
-  )
+(defn create-tweet [[screen-name tweets]]
+  (make-valid-tweet screen-name tweets))
 
 (defn reply [new-followers]
   (let [follower  (->> new-followers
                        seq
                        rand-nth)
         the-vec [follower (get-tweets follower)]]
-    (create-and-send-tweet the-vec)))
+    (let [tweet (create-tweet the-vec)]
+      (send-tweet tweet markov-creds))))
 
 (defn store-and-reply-to-followers [handles]
   (reply (find-new-followers handles)))
 
 (defn process-followers [screen-name]
-  (->> (followers-list :oauth-creds my-creds
+  (->> (followers-list :oauth-creds markov-creds
                        :params {:screen-name screen-name})
        :body
        :users
@@ -93,8 +91,11 @@
        ))
 
 (defn mock-user [handle]
-  (let [tweets (get-tweets handle)]
-    (create-and-send-tweet [handle tweets])))
+  (let [tweets (get-tweets handle)
+        tweet (create-tweet [handle tweets])]
+    (send-tweet tweet markov-creds)))
+
+;; (mock-user "kolemannix")
 
 (defn start-markov-thread [screen-name]
   (loop []
@@ -103,7 +104,3 @@
     (recur)))
 
 (defn -main [] (start-markov-thread "mockingmarkov"))
-
-;; (markov-clj.util/tick-now 500 #(println "Hey there!"))
-
-;; (process-followers)
