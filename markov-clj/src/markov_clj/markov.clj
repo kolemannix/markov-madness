@@ -58,7 +58,7 @@
   (let [seed (choose-seed database)]
     (loop [{word :word :as prefix-map} {:word :head :prefix seed}
            words [(last seed)]]
-      (if (= :tail word)
+      (if (or (= :tail word) (< 20 (count words)))
         words
         (recur (next-word database prefix-map) (conj words word))))))
 
@@ -74,4 +74,4 @@
                                   (apply str ,,)))]
     (repeatedly generation-fn)))
 
-(println (first (generate (parse-corpus (slurp "resources/corpus2.txt")) 2)))
+(println "\n" (first (generate (parse-corpus (slurp "resources/koleman_tweets.txt")) 1)))
