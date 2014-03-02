@@ -83,9 +83,9 @@
 (defn store-and-reply-to-followers [handles]
   (reply (find-new-followers handles)))
 
-(defn process-followers []
+(defn process-followers [screen-name]
   (->> (followers-list :oauth-creds my-creds
-                       :params {:screen-name "mockingmarkov"})
+                       :params {:screen-name screen-name})
        :body
        :users
        (map :screen_name)
@@ -94,12 +94,12 @@
 
 (defn mock-user [handle]
   (let [tweets (get-tweets handle)]
-    (create-and-send-tweet [handle tweets]))
+    (create-and-send-tweet [handle tweets])))
 
 (defn start-markov-thread []
   (loop []
     (Thread/sleep (* 60 15000))
-    (process-followers)
+    (process-followers "mockingmarkov")
     (recur)))
 
 (defn -main [] (start-markov-thread))
