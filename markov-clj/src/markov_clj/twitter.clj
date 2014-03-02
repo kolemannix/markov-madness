@@ -20,7 +20,7 @@
 
 (def my-creds (apply make-oauth-creds
                      (clojure.string/split-lines
-                      (slurp "twitter_auth.txt"))))
+                      (slurp "resources/twitter_auth/markov_auth.txt"))))
 
 ; simply retrieves the user, authenticating with the above credentials
 ; note that anything in the :params map gets the -'s converted to _'s
@@ -37,7 +37,7 @@
 
 (defn tweet-the-twitter [text]
   (try (statuses-update :oauth-creds my-creds
-                    :params {:status text})
+                        :params {:status text})
        (catch Exception e (println "Bitch I ain't stopping for no error.")))) 
 
 (defn store-followers [ids]
@@ -75,32 +75,34 @@
 
 (defn reply [new-followers]
   (let [follower  (->> new-followers
-                      seq
-                      rand-nth)
+                       seq
+                       rand-nth)
         the-vec [follower (get-tweets follower)]]
     (create-and-send-tweet the-vec)))
 
 (defn store-and-reply-to-followers [handles]
   (reply (find-new-followers handles)))
 
-(defn process-followers []
+(defn process-followers [screen-name]
   (->> (followers-list :oauth-creds my-creds
-                       :params {:screen-name "mockingmarkov"})
+                       :params {:screen-name screen-name})
        :body
        :users
        (map :screen_name)
        store-and-reply-to-followers
        ))
 
-;; (def ktweets (slurp "resources/koleman_tweets.txt"))
+(defn mock-user [handle]
+  (let [tweets (get-tweets handle)]
+    (create-and-send-tweet [handle tweets])))
 
-(defn start-markov-thread []
+(defn start-markov-thread [screen-name]
   (loop []
     (Thread/sleep (* 60 15000))
-    (process-followers)
+    (process-followers screen-name)
     (recur)))
 
-(defn -main [] (start-markov-thread))
+(defn -main [] (start-markov-thread "mockingmarkov"))
 
 ;; (markov-clj.util/tick-now 500 #(println "Hey there!"))
 
