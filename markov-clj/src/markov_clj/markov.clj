@@ -58,11 +58,10 @@
   (let [seed (choose-seed database)]
     (loop [{word :word :as prefix-map} {:word :head :prefix seed}
            words [(last seed)]]
-      (if (or (= :tail word) (< 15 (count words)))
+      (if (or (= :tail word) (< 120 (count (apply str words))))
         words
         (recur (next-word database prefix-map) (conj words word))))))
 
-;; TODO make this not necessary
 (defn remove-head [words]
   (filter #(not (= % :head)) words))
 
