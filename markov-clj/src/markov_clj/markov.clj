@@ -1,7 +1,11 @@
 (ns markov-clj.markov)
 
+
+(defn remove-handles [corpus]
+  (filter (complement (fn [word] (.startsWith word "@"))) corpus))
+
 (defn parse-corpus [s]
-  (clojure.string/split s #"\s+"))
+  (remove-handles (clojure.string/split s #"\s+")))
 
 (defn generate-tuples [n corpus]
   (partition n 1 corpus))
