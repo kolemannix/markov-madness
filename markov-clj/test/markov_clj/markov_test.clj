@@ -4,10 +4,11 @@
             [markov-clj.markov :refer :all]))
 
 
-(def corpus (re-seq #"\w+" (slurp "resources/corpus.txt")))
+(def corpus (clojure.string/split (slurp "resources/corpus.txt") #"\\s+"))
+(println corpus)
 
-(def baby-corpus (re-seq #"\w+" (slurp "resources/corpus2.txt")))
-(println baby-corpus)
+(def baby-corpus (clojure.string/split (slurp "resources/corpus2.txt") #"\\s+"))
+
 (time (count (build-database corpus 4)))
 (fact "Database is generated properly for small corpus"
   (build-database baby-corpus 3) => {["off" "The"] {"car" 1},

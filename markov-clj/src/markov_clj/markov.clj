@@ -41,6 +41,11 @@
           new-prefix (conj (subvec prefix 1) new-word)]
       {:word new-word :prefix new-prefix})
     {:word :tail}))
+(defn choose-seed [database]
+  (filter (fn [[k v]]
+            (Character/isUpperCase (ffirst k))) database))
+(choose-seed (build-database baby-corpus 3))
+(ffirst (build-database baby-corpus 3))
 
 (defn create-sentence [database seed]
   (loop [{word :word :as prefix-map} {:word :head :prefix seed} words '()]
