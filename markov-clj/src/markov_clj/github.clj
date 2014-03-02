@@ -50,6 +50,5 @@
 
 
 (defn generate-commits [user]
-  (markov/generate (slurp (make-user-filename user)) 1))
-
-(take 3 (generate-commits "kolemannix"))
+  (let [corpus (create-user-database user)]
+    (markov/generate corpus 1)))

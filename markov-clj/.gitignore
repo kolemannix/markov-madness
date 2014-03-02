@@ -10,3 +10,4 @@ pom.xml.asc
 twitter_auth.txt
 followers.txt
 .idea/*
+/.env
