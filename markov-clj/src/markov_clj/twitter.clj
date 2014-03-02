@@ -19,7 +19,7 @@
 
 (def my-creds (apply make-oauth-creds
                      (clojure.string/split-lines
-                      (slurp "twitter_auth.txt"))))
+                      (slurp "resources/twitter_auth/markov_auth.txt"))))
 
 ; simply retrieves the user, authenticating with the above credentials
 ; note that anything in the :params map gets the -'s converted to _'s
@@ -35,8 +35,8 @@
                                (map :text)))
 
 (defn tweet-the-twitter [text]
-  (statuses-update :oauth-creds my-creds
-                   :params {:status text})) 
+  (try (statuses-update :oauth-creds my-creds
+                    :params {:status text}))) 
 
 (defn store-followers [ids]
   (->>
@@ -69,8 +69,7 @@
 (defn create-and-send-tweet [[screen-name tweets]]
   (println screen-name tweets)
   (->> (make-valid-tweet screen-name tweets)
-       println
-       ;; tweet-the-twitter
+       tweet-the-twitter
        )
   )
 
@@ -93,8 +92,8 @@
        store-and-reply-to-followers
        ))
 
-(def ktweets (slurp "resources/koleman_tweets.txt"))
+(defn mock-user [handle]
+  (let [tweets (get-tweets handle)])
+  )
 
 (defn -main [] (process-followers))
-
-(process-followers)
