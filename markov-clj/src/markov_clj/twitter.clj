@@ -96,13 +96,13 @@
   (let [tweets (get-tweets handle)]
     (create-and-send-tweet [handle tweets])))
 
-(defn start-markov-thread []
+(defn start-markov-thread [screen-name]
   (loop []
     (Thread/sleep (* 60 15000))
-    (process-followers "mockingmarkov")
+    (process-followers screen-name)
     (recur)))
 
-(defn -main [] (start-markov-thread))
+(defn -main [] (start-markov-thread "mockingmarkov"))
 
 ;; (markov-clj.util/tick-now 500 #(println "Hey there!"))
 
