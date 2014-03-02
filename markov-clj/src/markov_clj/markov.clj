@@ -74,5 +74,3 @@
                                   (interpose " " ,,) 
                                   (apply str ,,)))]
     (repeatedly generation-fn)))
-
-(println "\n" (first (generate (parse-corpus (slurp "resources/koleman_tweets.txt")) 1)))
