@@ -1,0 +1,8 @@
+markov-clj/src/markov_clj/;
+markov-clj/src/markov_clj/;
+.gitignore
+markov-clj/resources/bbaumgar_commits.txt
+markov-clj/src/markov_clj/util.clj
+markov-clj/resources/brent_commits.txt
+markov-clj/resources/kolemannix_commits.txt
+markov-clj/.idea/.name

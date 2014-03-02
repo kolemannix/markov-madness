@@ -16,7 +16,6 @@
 (defn extract-repo-commit-messages [username repo]
   (->> repo
    (map (fn [c]
-          (println (c :author))
           (if
               (and (contains? c :commit) (contains? (c :author) :login) (= username ((c :author) :login)))
             ((c :commit) :message))))
@@ -35,6 +34,20 @@
 (defn- stringify [coll]
   (apply str (interpose " " coll)))
 
-(spit "resources/brent_commits.txt" (get-user-commit-corpus "bbaumgar"))
+(defn- make-user-filename [user]
+  (str "resources/" user "_commits.txt"))
 
-(take 3 (markov/generate (slurp "resources/brent_commits.txt") 1))
+(defn create-user-database [user]
+  (let [filename (make-user-filename user)
+        corpus (create-run-if-not-exists filename user)]
+    corpus))
+
+(defn create-run-if-not-exists [filename user]
+                                   (if-not (.exists (clojure.java.io/as-file filename))
+                                     (spit filename (get-user-commit-corpus user)))
+                                   (slurp filename))
+
+(defn generate-commits [user]
+  (markov/generate (slurp (make-user-filename user)) 1))
+
+(take 3 (generate-commits "kolemannix"))
