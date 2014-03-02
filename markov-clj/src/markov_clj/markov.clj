@@ -70,3 +70,6 @@
                                   (apply str ,,)))]
     (repeatedly generation-fn)))
 
+(println (first (generate (parse-corpus (slurp "resources/twocities.txt")) 2)))
+
+
