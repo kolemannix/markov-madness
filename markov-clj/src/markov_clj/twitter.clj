@@ -24,14 +24,14 @@
 ; simply retrieves the user, authenticating with the above credentials
 ; note that anything in the :params map gets the -'s converted to _'s
 
-(defn- get-page [screen_name]
+(defn- get-page [screen-name]
   (:body (statuses-user-timeline :oauth-creds my-creds
-                                 :params {:screen-name screen_name 
+                                 :params {:screen-name screen-name 
                                           :count 200
                                           :include-rts "false"})))
 
-(defn- get-tweets [screen_name] (->>
-                               (get-page screen_name)
+(defn- get-tweets [screen-name] (->>
+                               (get-page screen-name)
                                (map :text)))
 
 (defn tweet-the-twitter [text]
@@ -50,35 +50,50 @@
         current-fol (into #{} current)]
     (->>
      (into #{} old-fol)
-     (set/difference current-fol))))
+     (clojure.set/difference current-fol))))
 
 (defn make-valid-tweet [screen-name tweets]
-  (let [candidate-tweets (take 10 (markov-clj.markov/generate (apply str (interpose " " tweets)) 1))]
-    (str (first candidate-tweets) " - @" screen-name)))
+  (let [candidate-tweets (take 20 (markov-clj.markov/generate (apply str (interpose " " tweets)) 1))
+        suffix (str " - @" screen-name)]
+    (loop [candidate (first candidate-tweets)
+           others (rest candidate-tweets)]
+      (let [final-tweet (str candidate suffix)]
+        (println (count final-tweet) "*****\n" final-tweet)
+        (if (< (count final-tweet) 140)
+          final-tweet
+          (if (empty? others)
+            nil
+            (recur (first others) (rest others))))))))
 
 
-(defn markov-that-thun-thun-thun [[screen-name tweets]]
-  (->> (make-valid-tweet tweets screen-name)
-       tweet-the-twitter))
+(defn create-and-send-tweet [[screen-name tweets]]
+  (println screen-name tweets)
+  (->> (make-valid-tweet screen-name tweets)
+       println
+       ;; tweet-the-twitter
+       )
+  )
 
 (defn reply [new-followers]
-  (->> 
-   (map #(vector % (get-tweets %)) new-followers)
-   (map markov-that-thun-thun-thun)))
+  (let [follower  (->> new-followers
+                      seq
+                      rand-nth)
+        the-vec [follower (get-tweets follower)]]
+    (create-and-send-tweet the-vec)))
 
 (defn store-and-reply-to-followers [handles]
   (reply (find-new-followers handles)))
 
 (defn process-followers []
   (->> (followers-list :oauth-creds my-creds
-                      :params {:screen-name "mockingmarkov"})
+                       :params {:screen-name "mockingmarkov"})
        :body
        :users
        (map :screen_name)
        store-and-reply-to-followers
        ))
 
-(def ktweets (into [] (get-tweets 61524108)))
+(def ktweets (slurp "resources/koleman_tweets.txt"))
 
 (defn -main [] (process-followers))
 
