@@ -9,7 +9,8 @@
    [twitter.api.streaming]
    [clojure.data.json :as json ]
    [markov-clj.markov :as markov]
-   [clojure.set :as set])
+   [clojure.set :as set]
+   )
   (:require
    [http.async.client :as ac])
   (:import
@@ -58,7 +59,6 @@
     (loop [candidate (first candidate-tweets)
            others (rest candidate-tweets)]
       (let [final-tweet (str candidate suffix)]
-        (println (count final-tweet) "*****\n" final-tweet)
         (if (< (count final-tweet) 140)
           final-tweet
           (if (empty? others)
@@ -67,7 +67,6 @@
 
 
 (defn create-and-send-tweet [[screen-name tweets]]
-  (println screen-name tweets)
   (->> (make-valid-tweet screen-name tweets)
        println
        ;; tweet-the-twitter
@@ -93,8 +92,16 @@
        store-and-reply-to-followers
        ))
 
-(def ktweets (slurp "resources/koleman_tweets.txt"))
+;; (def ktweets (slurp "resources/koleman_tweets.txt"))
 
-(defn -main [] (process-followers))
+(defn start-markov-thread []
+  (loop []
+    (Thread/sleep (* 60 15000))
+    (process-followers)
+    (recur)))
 
-(process-followers)
+(defn -main [] (start-markov-thread))
+
+;; (markov-clj.util/tick-now 500 #(println "Hey there!"))
+
+;; (process-followers)
