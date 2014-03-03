@@ -1,14 +1,7 @@
 # markov-clj
 
-A Clojure library designed to ... well, that part is up to you.
+=======
+Repository for our HackNC 2014 project. Fun with Markov chains and pseudo-random text.
 
-## Usage
-
-FIXME
-
-## License
-
-Copyright © 2014 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+![alt tag](https://scontent-b.xx.fbcdn.net/hphotos-prn1/v/t35/1939260_10203355633235249_845983986_o.jpg?oh=b41b400a7e9cde9af48a1f3b2366e807&oe=531532A0)
+>>>>>>> 723edb85842cbe5b1130bd65b29463584fcc89a9
