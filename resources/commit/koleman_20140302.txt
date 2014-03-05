@@ -1,0 +1,59 @@
+remove ds_store
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> remove unused stuff
+
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> Update README.md Merge branch 'master' of https://github.com/kolemannix/emacs.d
+
+Conflicts:
+	ac-comphist.dat
+	init.el
+
+merged add things
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> make config more modular
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> remove old bindings. make new bindings.
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> remove old bindings. make new bindings.
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> bind return to return and indent
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> update update README remove old .emacs that was hiding evil nc working again, some shiny new bindings. Tons of bindings. derp Merge branch 'master' of https://github.com/kolemannix/emacs.d
+
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> remove backup.clj Create README.md initial commit
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> initial commit
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> Add auth file for dickens bot     Add condition for @ characters Make it a vec again Remove @ from handles rather than breaking the chain Bring in overtone scheduler decrease tweet length Filter handles    Fine-tune character-limiting for twitter! Decrease word count Add koleman_tweets fix parsing
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>    remove test line
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> things
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>  Hardcode a word limit on the generations. Wow huge results from this small change! rename tweets file and move
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>   merge
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> change things
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>    Polish up generate function. Remove :head from final word list in a hack-ish way
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>    fix bug with seed generation and write test
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> formatting
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> clean up punctuation parsing stuff and tests
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> dont drop punctuation when parsing corpus
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> markov said his first words! "foggy is sky the fast"!
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> almost done with generate-sentence
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> testsssss Add corpus files to repo implement selection function  complete index-frequencies function, write some tests
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com>  add leiningen project
+
+Signed-off-by: Koleman Nix <kolemannix@gmail.com> initial commit
